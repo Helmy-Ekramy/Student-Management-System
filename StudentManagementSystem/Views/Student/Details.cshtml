@@ -1,0 +1,162 @@
+﻿@using StudentManagementSystem.ViewModels
+@model StudentDetailsModel
+
+<div class="container py-4">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card border-white shadow-sm">
+                <div class="card-header bg-light">
+                    <div class="d-flex align-items-center flex-wrap gap-3">
+                        <div class="avatar border border-2 rounded-circle overflow-hidden" style="width: 100px; height: 100px;">
+                            @if(!String.IsNullOrEmpty(Model.StudentImage) )
+                            {
+                                <img src="@Model.StudentImage" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="Student Image">
+
+                            }
+                            else
+                            {
+                                <img src="~/assets/img/students/temp.jpg" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="Student Image">
+
+                            }
+                        </div>
+                        <div>
+                            <span class="badge bg-success mb-1 d-inline-flex align-items-center">
+                                <i class="bi bi-circle-fill me-1"></i> Active
+                            </span>
+                            <h5 class="mb-0 fw-bold">@Model.Name</h5>
+                            <p class="text-muted mb-0">Total Courses: @Model.Enrollments.Count</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="mb-4 text-primary">Basic Information</h5>
+                    <dl class="row gx-3 gy-2">
+                        <dt class="col-sm-5 fw-semibold text-dark">ID</dt>
+                        <dd class="col-sm-7">@Model.Id</dd>
+
+                        <dt class="col-sm-5 fw-semibold text-dark">Email</dt>
+                        <dd class="col-sm-7">@Model.Email</dd>
+
+                        <dt class="col-sm-5 fw-semibold text-dark">Date of Birth</dt>
+                        <dd class="col-sm-7">@Model.DateOfBirth.ToString("yyyy-MM-dd")</dd>
+
+                        <dt class="col-sm-5 fw-semibold text-dark">Department</dt>
+                        <dd class="col-sm-7">@Model.DepartmentName</dd>
+                    </dl>
+
+                    <div class="mt-4">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning w-100">
+                            <i class="bi bi-pencil-square me-1"></i> Edit
+                        </a>
+                    </div>
+                    <div class="mt-4">
+                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger w-100">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    </div>
+                    <div class="mt-4">
+                        <a asp-action="Create" asp-controller="Enrollment" asp-route-id="@Model.Id"
+                           class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center gap-2 rounded-3 shadow-sm">
+                            <i class="bi bi-journal-plus"></i>
+                            Enroll in a New Course
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-secondary bg-opacity-50 text-white fw-semibold d-flex justify-content-between align-items-center">
+                    <span>Courses</span>
+                    <a asp-action="OpenGrades"
+                       asp-controller="Enrollment"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-outline-success">
+                        <i class="bi bi-plus-circle me-1"></i> Add Result
+                    </a>
+                </div>
+
+                <div class="card-body p-0">
+                    <table class="table table-hover table-bordered text-center mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 10%;">Id</th>
+                                <th>Course Name</th>
+                                <th>Credits</th>
+                                <th style="width: 25%;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in Model.Enrollments )
+                            {
+                                <tr>
+                                    <td>@c?.Id</td>
+                                    <td class="fw-semibold">@c?.CourseName</td>
+                                    <td class="fw-semibold">@c?.Credits</td>
+                                    <td>
+                                        <a asp-action="Edit" asp-controller="Enrollment" asp-route-id="@c?.Id" class="btn btn-outline-warning btn-sm me-2">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
+                                        <a asp-action="Delete" asp-controller="Enrollment" asp-route-id="@c?.Id" class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="accordion" id="examResultsAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="resultsHeading">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#resultsCollapse" aria-expanded="false" aria-controls="resultsCollapse">
+                            <span class="avatar avatar-sm bg-success me-2"><i class="ti ti-checks"></i></span>
+                            Exam Results
+                        </button>
+                    </h2>
+                    <div id="resultsCollapse" class="accordion-collapse collapse" aria-labelledby="resultsHeading" data-bs-parent="#examResultsAccordion">
+                        <div class="accordion-body">
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Subject</th>
+                                            <th>Max</th>
+                                            <th>Min</th>
+                                            <th>Obtained</th>
+                                            <th class="text-end">Result</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var course in Model.Enrollments)
+                                        {
+
+
+                                            <tr>
+                                                <td>@course.CourseName</td>
+                                                <td>100</td>
+                                                <td>50</td>
+                                                <td>@(course.Grade?.ToString() ?? "—")</td>
+                                                <td class="text-end @course.resultClass">
+                                                    @if (!string.IsNullOrEmpty(course.result))
+                                                    {
+                                                        <i class="ti ti-circle-filled me-1"></i>
+                                                        @course.result
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div> <!-- /.table-responsive -->
+                        </div> <!-- /.accordion-body -->
+                    </div> <!-- /.accordion-collapse -->
+                </div> <!-- /.accordion-item -->
+            </div> <!-- /.accordion -->
+        </div> <!-- /.col-md-8 -->
+    </div> <!-- /.row -->
+</div>

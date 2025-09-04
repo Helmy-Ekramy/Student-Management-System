@@ -1,0 +1,43 @@
+﻿@model Student
+
+<h2>Edit Grades</h2>
+
+<form asp-action="EditGrades" method="post">
+    <input type="hidden" asp-for="Id" />
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Course</th>
+                <th>Score (0 - 100)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Enrollments.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Model.Enrollments[i].Course?.Name
+                        <input type="hidden" asp-for="Enrollments[@i].Id" />
+                        <input type="hidden" asp-for="Enrollments[@i].CourseId" />
+                        <input type="hidden" asp-for="Enrollments[@i].StudentId" />
+
+
+
+                    </td>
+                    <td>
+                        <input asp-for="Enrollments[@i].Grade" class="form-control" type="number" min="0" max="100" step="1" />
+                        <span asp-validation-for="Enrollments[@i].Grade" class="text-danger"></span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-outline-success">Save</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

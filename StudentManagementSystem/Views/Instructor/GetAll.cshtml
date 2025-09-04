@@ -1,0 +1,50 @@
+﻿@model List<Instructor>
+
+<div class="container my-5">
+    <div class="card shadow-lg bg-gradient  rounded-4 border-0">
+        <div class="card-header bg-gradient text-bg-success text-white d-flex justify-content-between align-items-center rounded-top-4">
+            <h3 class="mb-0 fw-bold">Instructors</h3>
+            <a asp-action="Create"  class="btn btn-light text-primary fw-semibold shadow-sm">
+                <i class="bi bi-plus-circle me-1"></i> Add New
+            </a>
+        </div>
+
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle text-center rounded-3 overflow-hidden">
+                    <thead class="bg-secondary bg-opacity-50 text-white">
+                        <tr>
+                            <th style="width: 10%;">Id</th>
+                            <th>Instructor Name</th>
+                            <th>Hire Date</th>
+                            <th>Office Location</th>
+                            <th style="width: 25%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                            @foreach (var inst in Model)
+                            {
+                                <tr>
+                                    <td>@inst.Id</td>
+                                    <td class="fw-semibold">@inst.Name</td>
+                                         <td class="fw-semibold">@inst.HireDate.ToString("yyyy-MM-dd")</td>
+                                <td class="fw-semibold">@inst?.OfficeAssignment?.Location</td>
+
+
+                                <td>
+                                        <a asp-action="Edit" asp-route-id="@inst.Id" class="btn btn-outline-warning btn-sm me-2">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@inst.Id" class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

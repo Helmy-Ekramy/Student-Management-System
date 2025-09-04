@@ -1,0 +1,34 @@
+﻿@model Student
+@{
+    SelectList depts = new SelectList(ViewBag.depts, "Id", "Name");
+}
+
+<div class="container my-5">
+    <div class="card shadow-lg bg-light bg-gradient border-0 rounded-4">
+        <div class="card-header bg-gradient text-bg-success text-white d-flex justify-content-between align-items-center rounded-top-4">
+            <h3 class="mb-0 fw-bold">
+                <i class="bi bi-building-add me-2"></i> Add New Student
+            </h3>
+        </div>
+
+        <div class="card-body p-4">
+            <form asp-action="AddStudent" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label asp-for="StudentImage" class="form-label fw-semibold"></label>
+                    <input name="img" type="file" class="form-control rounded-3" />
+                    <span asp-validation-for="StudentImage" class="text-danger small"></span>
+                </div>
+                <partial name="CreateEditPartial" />
+
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+}
