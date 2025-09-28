@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using StudentManagementSystem.Context;
 using StudentManagementSystem.Models;
+using StudentManagementSystem.ViewModels;
 
 namespace StudentManagementSystem.Controllers
 {
@@ -65,7 +66,22 @@ namespace StudentManagementSystem.Controllers
             var e = db.Enrollments.Find(id);
             db.Enrollments.Remove(e);
             db.SaveChanges();
-            return RedirectToAction("Details", "Student", new {id=e.StudentId});
+            //return RedirectToAction("Details", "Student", new {id=e.StudentId});
+            var enrollments = db.Enrollments.Where(en => en.StudentId == e.StudentId).Select(e => new EnrollmentDetailsModel
+            {
+                Id = e.Id,
+                CourseName = e.Course.Name,
+                Credits = e.Course.Credits,
+                Grade = e.Grade,
+                result = e.Grade != null ? (e.Grade >= 50 ? "Pass" : "Fail") : e.result,
+                resultClass = e.Grade != null ? (e.Grade >= 50 ? "text-success" : "text-danger") : e.resultClass
+
+
+            })
+            .ToList();
+
+          
+            return PartialView("_DeleteEnrollPartial", enrollments);
         }
 
 

@@ -1,4 +1,5 @@
-﻿@model List<Department>
+﻿@using StudentManagementSystem.ViewModels
+@model List<DepartmentsGetAllModel>
 
 <div class="container my-5">
     <div class="card shadow-lg bg-gradient  rounded-4 border-0">
@@ -23,12 +24,12 @@
                     </thead>
                     <tbody>
 
-                            @foreach (Department dept in Model)
+                            @foreach (var dept in Model)
                             {
                                 <tr>
                                     <td>@dept.Id</td>
                                     <td class="fw-semibold">@dept.Name</td>
-                                         <td class="fw-semibold">@dept.Students.Count</td>
+                                         <td class="fw-semibold">@dept.StudentCount</td>
 
                                     <td>
                                         <a asp-action="Edit" asp-route-id="@dept.Id" class="btn btn-outline-warning btn-sm me-2">

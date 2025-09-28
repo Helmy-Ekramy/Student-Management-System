@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Context;
 using StudentManagementSystem.Models;
+using StudentManagementSystem.Repository;
 using System.ComponentModel.DataAnnotations;
 
 namespace StudentManagementSystem.Controllers
@@ -11,8 +12,14 @@ namespace StudentManagementSystem.Controllers
     //[Authorize]
     public class DepartmentController : Controller
     {
-        StudentManagementContext db=new StudentManagementContext();
 
+            IDepartmentRepository DepartmentRepository;
+
+        public DepartmentController(IDepartmentRepository departmentRepository)
+        {
+            //DepartmentRepository = new DepartmentRepository();
+            DepartmentRepository = departmentRepository;
+        }
 
         public IActionResult TestDeptName(string Name)
         {
@@ -28,15 +35,15 @@ namespace StudentManagementSystem.Controllers
 
         public IActionResult Edit(int id)
         {
-           var dept = db.Departments.Find(id);
+            var dept = DepartmentRepository.GetById(id);
            return View(dept);   
         }
 
         public IActionResult EditDept(Department dept)
         {
 
-                db.Departments.Update(dept);
-                db.SaveChanges();
+            DepartmentRepository.Update(dept);
+            DepartmentRepository.Save();
 
                 return RedirectToAction("GetAll");
 
@@ -44,9 +51,8 @@ namespace StudentManagementSystem.Controllers
 
         public IActionResult Delete(int id)
         {
-           var dept= db.Departments.Find(id);
-            db.Departments.Remove(dept); 
-            db.SaveChanges();
+            DepartmentRepository.Delete(id);
+            DepartmentRepository.Save();
             return RedirectToAction("GetAll");
         }
 
@@ -57,8 +63,8 @@ namespace StudentManagementSystem.Controllers
 
         public IActionResult AddDepartment(Department neww)
         {
-                    db.Departments.Add(neww);
-                    db.SaveChanges();
+                    DepartmentRepository.Add(neww);
+            DepartmentRepository.Save();
                 return RedirectToAction("GetAll");
             //if (ModelState.IsValid)
             //{
@@ -71,7 +77,7 @@ namespace StudentManagementSystem.Controllers
         public IActionResult GetAll()
         {
 
-            var depts=db.Departments.Include(d=>d.Students).ToList();
+            var depts=DepartmentRepository.GetAll();
 
             if(depts!=null)
             {

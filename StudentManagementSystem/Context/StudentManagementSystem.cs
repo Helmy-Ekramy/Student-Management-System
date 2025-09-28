@@ -1,10 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Models;
 namespace StudentManagementSystem.Context
 
 {
-    public class StudentManagementContext:DbContext
+    public class StudentManagementContext:IdentityDbContext<ApplicationUser>
     {
+
+        public StudentManagementContext():base()
+        {
+            
+        }
+
+        public StudentManagementContext(DbContextOptions<StudentManagementContext> options):base(options)
+        {
+            
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=HELMY_EKRAMY\\SQLEXPRESS;Database=StudentManagement;Trusted_Connection=true;Encrypt=false");

@@ -1,4 +1,5 @@
-﻿@model List<Student>
+﻿@using StudentManagementSystem.ViewModels
+@model List<StudentGetAllModel>
 
 
 <div class="container my-5">
@@ -43,7 +44,7 @@
                     </thead>
                     <tbody>
 
-                        @foreach (Student st in Model)
+                        @foreach (var st in Model)
                         {
                             <tr>
                                 <td>@st.Id</td>
@@ -55,7 +56,7 @@
 
                                 <td class="fw-semibold">@st.Email</td>
                                 <td class="fw-semibold">@st.DateOfBirth.ToString("yyyy-MM-dd")</td>
-                                <td class="fw-semibold">@st.Department.Name</td>
+                                <td class="fw-semibold">@st.DeptName</td>
 
 
 

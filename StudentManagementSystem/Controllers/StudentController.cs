@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using StudentManagementSystem.Context;
 using StudentManagementSystem.Models;
+using StudentManagementSystem.Repository;
 using StudentManagementSystem.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -11,33 +14,22 @@ namespace StudentManagementSystem.Controllers
     //[Route("student")]
     public class StudentController : Controller
     {
-        StudentManagementContext db = new StudentManagementContext();
+        IStudentRepository studentRepository;
+        IDepartmentRepository departmentRepository;
+        public StudentController(IStudentRepository studentRepository, IDepartmentRepository departmentRepository)
+        {
+            //studentRepository = new StudentRepository();    
+            this.studentRepository = studentRepository;
+            this.departmentRepository = departmentRepository;
+        }
+
 
         //[Route("data/{id:int}")]
         public IActionResult Details(int id)
         {
-            var student = db.Students
-                .Where(s=>s.Id==id)
-                .Select(s => new StudentDetailsModel
-                {
-                    Id = s.Id,
-                    Name = s.Name,
-                    Email = s.Email,
-                    DateOfBirth = s.DateOfBirth,
-                    DepartmentName = s.Department.Name,
-                    StudentImage = s.StudentImage,
-                    Enrollments = s.Enrollments.Select(e => new EnrollmentDetailsModel
-                    {
-                        Id = e.Id,
-                        CourseName = e.Course.Name,
-                        Credits = e.Course.Credits,
-                        Grade = e.Grade,
-                        result = e.Grade != null ? (e.Grade >= 50 ? "Pass" : "Fail") : e.result,
-                        resultClass = e.Grade != null ? (e.Grade >= 50 ? "text-success" : "text-danger") : e.resultClass
+            //
 
-                    }
-                    ).ToList()
-                }).FirstOrDefault();
+            var student=studentRepository.GetDetailsById(id);
                 
             return View(student);
         }
@@ -64,10 +56,17 @@ namespace StudentManagementSystem.Controllers
         }
 
         //[Route("getAll")]
-        public IActionResult GetAll(string search)
-        {
 
-            var students = db.Students.Include(s=>s.Department).ToList();
+        [Authorize]
+        public IActionResult GetAll(string search="")
+        {
+            //
+
+            //var students = db.Students.Include(s=>s.Department).ToList();
+
+            var students = studentRepository.GetAll();
+            
+
 
             if (students != null)
             {
@@ -87,16 +86,23 @@ namespace StudentManagementSystem.Controllers
 
         public IActionResult Create()
         {
+            //
+            //DepartmentRepository departmentRepository = new DepartmentRepository();
 
-            ViewBag.depts=db.Departments.ToList();
+            ViewBag.depts=departmentRepository.GetAll();
+
             return View();
         }
 
         [HttpPost]
         public IActionResult AddStudent(Student neww, IFormFile img)
         {
-            db.Students.Add(neww);
-            db.SaveChanges();
+            //
+            //db.Students.Add(neww);
+            //db.SaveChanges();
+
+            studentRepository.Add(neww);
+            studentRepository.Save();
 
             if (img != null && img.Length > 0)
             {
@@ -114,7 +120,8 @@ namespace StudentManagementSystem.Controllers
                 }
 
                 neww.StudentImage = "/assets/img/students/" + fileName;
-              db.SaveChanges();
+              //db.SaveChanges();
+              studentRepository.Save();
             }
 
 
@@ -124,25 +131,36 @@ namespace StudentManagementSystem.Controllers
 
         public IActionResult Delete(int id)
         {
-            var st = db.Students.Find(id);
-            db.Students.Remove(st);
-            db.SaveChanges();
+            //
+            //var st = db.Students.Find(id);
+            //db.Students.Remove(st);
+            //db.SaveChanges();
+
+            studentRepository.Delete(id);
+            studentRepository.Save();
             return RedirectToAction("GetAll");
         }
         public IActionResult Edit(int id)
         {
-            ViewBag.depts = db.Departments.ToList();
+            //
 
-            var student = db.Students.Find(id);
+            //DepartmentRepository departmentRepository = new DepartmentRepository();
+
+            ViewBag.depts = departmentRepository.GetAll();
+
+            //var student = db.Students.Find(id);
+            var student = studentRepository.GetById(id);
+
             return View(student);
         }
 
         public IActionResult EditStudent(Student st)
         {
-
-            db.Students.Update(st);
-            db.SaveChanges();
-
+            //
+            //db.Students.Update(st);
+            //db.SaveChanges();
+            studentRepository.Update(st);
+            studentRepository.Save();
             return RedirectToAction("GetAll");
 
         }

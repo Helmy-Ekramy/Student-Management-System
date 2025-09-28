@@ -1,0 +1,20 @@
+﻿@using StudentManagementSystem.ViewModels
+@model List<EnrollmentDetailsModel>
+@foreach (var course in Model)
+{
+
+
+    <tr>
+        <td>@course.CourseName</td>
+        <td>100</td>
+        <td>50</td>
+        <td>@(course.Grade?.ToString() ?? "—")</td>
+        <td class="text-end @course.resultClass">
+            @if (!string.IsNullOrEmpty(course.result))
+            {
+                <i class="ti ti-circle-filled me-1"></i>
+                @course.result
+            }
+        </td>
+    </tr>
+}

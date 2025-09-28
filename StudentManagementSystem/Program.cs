@@ -1,5 +1,10 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using StudentManagementSystem.Context;
 using StudentManagementSystem.Filters;
 using StudentManagementSystem.Middleware;
+using StudentManagementSystem.Models;
+using StudentManagementSystem.Repository;
 
 namespace StudentManagementSystem
 {
@@ -15,6 +20,32 @@ namespace StudentManagementSystem
                 op.Filters.Add<LoggingActionFilter>();
             });
 
+
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(new Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter());
+            });
+
+
+
+            builder.Services.AddDbContext<StudentManagementContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("con1"));
+            });
+
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 4;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireUppercase = false;
+
+            })
+                .AddEntityFrameworkStores<StudentManagementContext>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -27,7 +58,7 @@ namespace StudentManagementSystem
             //app.UseMiddleware<LoggerMiddleware>(); 
             app.UseHttpsRedirection();
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();

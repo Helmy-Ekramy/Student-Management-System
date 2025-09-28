@@ -1,0 +1,50 @@
+﻿
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center" asp-area="" asp-controller="Student" asp-action="GetAll">
+            <i class="bi bi-mortarboard me-2 fs-4"></i>
+            Student Management System
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto gap-2">
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold text-white" asp-controller="Student" asp-action="GetAll">
+                        <i class="bi bi-people-fill me-1"></i> Students
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold text-white" asp-controller="Department" asp-action="GetAll">
+                        <i class="bi bi-building me-1"></i> Departments
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold text-white" asp-controller="Course" asp-action="GetAll">
+                        <i class="bi bi-book me-1"></i> Courses
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold text-white" asp-controller="Instructor" asp-action="GetAll">
+                        <i class="bi bi-person-fill me-1"></i> Instructors
+                    </a>
+                </li>
+
+                @if(User.Identity.IsAuthenticated)
+                {
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold text-white" asp-controller="Account" asp-action="SignOut">
+                        <i class="bi bi-box-arrow-right me-1"></i> Log Out
+                    </a>
+                </li>                    
+                }
+
+
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -88,6 +88,7 @@
                             </tr>
                         </thead>
                         <tbody>
+
                             @foreach (var c in Model.Enrollments )
                             {
                                 <tr>
@@ -98,7 +99,7 @@
                                         <a asp-action="Edit" asp-controller="Enrollment" asp-route-id="@c?.Id" class="btn btn-outline-warning btn-sm me-2">
                                             <i class="bi bi-pencil-square"></i> Edit
                                         </a>
-                                        <a asp-action="Delete" asp-controller="Enrollment" asp-route-id="@c?.Id" class="btn btn-outline-danger btn-sm">
+                                        <a asp-action="Delete" asp-controller="Enrollment" asp-route-id="@c?.Id" class="btn btn-outline-danger btn-sm" onclick="DeleteEnroll(@c?.Id,event,this)">
                                             <i class="bi bi-trash"></i> Delete
                                         </a>
                                     </td>
@@ -131,25 +132,11 @@
                                             <th class="text-end">Result</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        @foreach (var course in Model.Enrollments)
-                                        {
+                                    <tbody id="resultTable">
 
+                                        <partial name="_DeleteEnrollPartial" model="@Model.Enrollments">
 
-                                            <tr>
-                                                <td>@course.CourseName</td>
-                                                <td>100</td>
-                                                <td>50</td>
-                                                <td>@(course.Grade?.ToString() ?? "—")</td>
-                                                <td class="text-end @course.resultClass">
-                                                    @if (!string.IsNullOrEmpty(course.result))
-                                                    {
-                                                        <i class="ti ti-circle-filled me-1"></i>
-                                                        @course.result
-                                                    }
-                                                </td>
-                                            </tr>
-                                        }
+                            
                                     </tbody>
                                 </table>
                             </div> <!-- /.table-responsive -->
@@ -160,3 +147,29 @@
         </div> <!-- /.col-md-8 -->
     </div> <!-- /.row -->
 </div>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+
+
+    function DeleteEnroll(id,event,element){
+        event.preventDefault();
+        document.getElementById("resultTable").innerHTML="";
+
+
+            $.ajax({
+     url: "/Enrollment/Delete/" + id,
+    success: function (result) {
+             let row = element.closest("tr");
+            row.remove();
+        document.getElementById("resultTable").innerHTML= result;
+
+
+    }
+    
+        }
+     );
+    }
+
+
+</script>
